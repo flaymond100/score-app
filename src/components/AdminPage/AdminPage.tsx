@@ -1,71 +1,127 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
-import {addDoc, collection, getDocs} from "firebase/firestore";
+import {addDoc, collection, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase-config";
 import {updateProfile} from "firebase/auth";
 import { Redirect, withRouter } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import FinalResultTable from './FinalResultTable'
+import {Badge, Col, Dropdown, Form, InputNumber, Space, Spin, Table} from "antd";
+import menu from "antd/lib/menu";
 
 const AdminPage = ({history}:any) => {
-    const [users, setUsers] = useState<any>([]);
+    const [users, setUsers] = useState<any>();
+    const [updatedTotalScore, setUpdatedTotalScore] = useState<any>();
     const { currentUser } = useContext(AuthContext);
-    const judgeId = currentUser.uid;
-    const usersRef = collection(db, 'users');
 
     const user = auth.currentUser;
 
-    // The user object has basic properties such as display name, email, etc.
-    const displayName = user?.displayName;
-    const email = user?.email;
-    const photoURL = user?.photoURL;
-    const emailVerified = user?.emailVerified;
+    const usersEmail = [
+        'user@gmail.com',
+        'user1@gmail.com'
+    ];
 
-    // The user's ID, unique to the Firebase project. Do NOT use
-    // this value to authenticate with your backend server, if
-    // you have one. Use User.getToken() instead.
-    const uid = user?.uid;
-
-
-
-
-
-    if(user !== null) {
-        // @ts-ignore
-        updateProfile(auth.currentUser, {
-            displayName: "Сидоренко Марина", photoURL: "https://example.com/jane-q-user/profile.jpg"
-        }).then(() => {
-
-        }).catch((error) => {
-            // An error occurred
-            // ...
-        });
-    }
 
     useEffect(() => {
+        let arr:any = [];
         const getUsers = async () => {
-            const data = await getDocs(usersRef);
-            setUsers(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+            await Promise.all(usersEmail.map(async(email:any) => {
+                const data = await getDocs(collection(db, email));
+                let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id })));
+                singleData.map((e:any) => {
+                    arr.push(e);
+                })
+            }))
+            setUsers(arr)
         }
-
         getUsers()
+
     }, []);
 
-    const createUser = async () => {
-        await addDoc(usersRef, {name: 'Mark', score: 56})
+    const expandedRowRender = (parentTable:any) => {
+        let data: any = [];
+
+        users.map((user:any) => {
+            if(parentTable.judge == user.username) {
+                data.push(user.data[0]);
+            }
+        });
+
+        const columns = [
+            {
+                title: 'Модель',
+                dataIndex: 'model',
+                key: 'model',
+            },
+            {
+                title: 'Чистота робочого місця',
+                dataIndex: 'clearness',
+                key: 'clearness',
+            },
+            {
+                title: 'Колiр',
+                dataIndex: 'color',
+                key: 'color',
+            },
+            {
+                title: 'Форма',
+                dataIndex: 'forms',
+                key: 'forms',
+            },
+            {
+                title: 'Техніка',
+                key: 'technique',
+                dataIndex: 'technique'
+
+            },
+            {
+                title: 'Технічність виконання продцедури',
+                key: 'technique_procedure',
+                dataIndex: 'technique_procedure'
+            },
+            {
+                title: 'Бал',
+                key: 'totalScore',
+                dataIndex: 'totalScore'
+            },
+        ];
+        return <Table columns={columns} dataSource={data} pagination={false} />;
+    };
+
+    const columns = [
+        {
+            title: 'Суддя',
+            dataIndex: 'judge',
+            key: 'judge',
+        }
+    ];
+
+    const data = [];
+    for (let i = 0; usersEmail.length > i; i++) {
+        data.push({
+            key: i,
+            judge: usersEmail[i],
+        });
     }
 
     const singOut = () => {
         auth.signOut()
             .then(() => <Redirect to={"/"} />
             )
-        history.push('/')
+        history.push('/');
         return <Redirect to={"/"} />
     }
 
     return (
         <>
             <h1>Admin page</h1>
-            <h4>Судья: {displayName}</h4>
+            {users ? <Table
+                className="components-table-demo-nested"
+                columns={columns}
+                expandable={{ expandedRowRender }}
+                dataSource={data}
+            /> : <Spin />}
+            <FinalResultTable data={users}/>
             <button onClick={singOut}>Sign out</button>
         </>
     );
