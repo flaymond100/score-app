@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {auth, db} from '../firebase-config';
 import 'firebase/auth';
-import {collection, getDocs} from "firebase/firestore";
 
 export const AuthContext = React.createContext({} as any);
 
@@ -9,7 +8,6 @@ export const AuthProvider = ({ children }: any) => {
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [currentRole, setCurrentRole] = useState<any>('');
     const [pending, setPending] = useState(true);
-    const [users, setUsers] = useState<any>([]);
 
     useEffect(() => {
         auth.onAuthStateChanged((user:any) => {
@@ -27,7 +25,7 @@ export const AuthProvider = ({ children }: any) => {
     if(pending){
         return <>Loading...</>
     }
-
+    console.log(currentUser)
     return (
         <AuthContext.Provider
             value={{
