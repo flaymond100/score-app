@@ -5,24 +5,7 @@ body {
   sans-serif;
 }
 
-/*h1 {*/
-/*  font-weight: 100;*/
-/*  color: white;*/
-/*  text-align: center;*/
-/*  padding-bottom: 10px;*/
-/*  border-bottom: 1px solid rgb(79, 98, 148);*/
-/*}*/
-
-/*p {*/
-/*  color: #bf1650;*/
-/*}*/
-
-/*.App {*/
-/*  max-width: 600px;*/
-/*  margin: 0 auto;*/
-/*}*/
-
-/*hr {*/
-/*  margin-top: 30px;*/
-/*}*/
+.App {
+  text-align: center;
+}
 

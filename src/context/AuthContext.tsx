@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {auth, db} from '../firebase-config';
+import { auth, db} from '../firebase-config';
 import 'firebase/auth';
 
 export const AuthContext = React.createContext({} as any);
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: any) => {
     if(pending){
         return <>Loading...</>
     }
-    console.log(currentUser)
+    //console.log(currentUser)
     return (
         <AuthContext.Provider
             value={{
