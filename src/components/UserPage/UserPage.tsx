@@ -4,12 +4,14 @@ import { withRouter, Redirect } from 'react-router';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Col, Divider, Form, InputNumber, Modal, Result } from "antd";
+import uniqid from 'uniqid';
 
 const UserPage = ({history}:any) => {
     const [categories, setCategories] = useState<any>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {currentUser} = useContext(AuthContext);
     const [form] = Form.useForm();
+    const keyId = uniqid();
 
     useEffect(() => {
         const getCategories = async () => {
@@ -72,15 +74,19 @@ const UserPage = ({history}:any) => {
             if (key !== 'model') sum += +values[key];
         }
         values.totalScore = sum;
-        const newData = {data: [{...values}], username: ''}
-        newData.username = currentUser.email;
 
+        const newData = {data: [{...values, key: keyId }], username: ''}
+        newData.username = currentUser.email;
+        console.log(newData)
         setIsModalVisible(true);
 
         const usersRef = collection(db, currentUser.email);
         await addDoc(usersRef, newData)
         form.resetFields();
     };
+
+    console.log(currentUser.email)
+    const username = currentUser.email.split("@")[0];
 
     return (
         <div style={{textAlign:'center'}}>
@@ -98,6 +104,7 @@ const UserPage = ({history}:any) => {
                 />
             </Modal>
             <h1>Страница оценки модели</h1>
+            <h2 style={{color: 'crimson'}}>Суддя: <strong>{username}</strong></h2>
             <Form
                 name="basic"
                 form={form}

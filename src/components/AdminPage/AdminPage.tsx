@@ -2,25 +2,17 @@ import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {addDoc, collection, doc, getDocs} from "firebase/firestore";
 import {auth, db} from "../../firebase-config";
-import {updateProfile} from "firebase/auth";
 import { Redirect, withRouter } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import FinalResultTable from './FinalResultTable'
-import {Badge, Col, Dropdown, Form, InputNumber, Space, Spin, Table} from "antd";
-import menu from "antd/lib/menu";
+import { Spin, Table } from "antd";
 
 const AdminPage = ({history}:any) => {
     const [users, setUsers] = useState<any>();
-    const [updatedTotalScore, setUpdatedTotalScore] = useState<any>();
-    const { currentUser } = useContext(AuthContext);
-
-    const user = auth.currentUser;
 
     const usersEmail = [
         'user@gmail.com',
         'user1@gmail.com'
     ];
-
 
     useEffect(() => {
         let arr:any = [];
@@ -42,7 +34,8 @@ const AdminPage = ({history}:any) => {
         let data: any = [];
 
         users.map((user:any) => {
-            if(parentTable.judge == user.username) {
+
+            if(parentTable.judge === user.username) {
                 data.push(user.data[0]);
             }
         });
@@ -85,6 +78,7 @@ const AdminPage = ({history}:any) => {
                 dataIndex: 'totalScore'
             },
         ];
+        console.log(data)
         return <Table columns={columns} dataSource={data} pagination={false} />;
     };
 
@@ -99,7 +93,7 @@ const AdminPage = ({history}:any) => {
     const data = [];
     for (let i = 0; usersEmail.length > i; i++) {
         data.push({
-            key: i,
+            key: usersEmail[i]+i,
             judge: usersEmail[i],
         });
     }
@@ -113,17 +107,18 @@ const AdminPage = ({history}:any) => {
     }
 
     return (
-        <>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <h1>Admin page</h1>
             {users ? <Table
                 className="components-table-demo-nested"
+                style={{width: '80%'}}
                 columns={columns}
                 expandable={{ expandedRowRender }}
                 dataSource={data}
             /> : <Spin />}
             <FinalResultTable data={users}/>
             <button onClick={singOut}>Sign out</button>
-        </>
+        </div>
     );
 }
 
