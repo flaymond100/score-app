@@ -93,17 +93,17 @@ const UserPage = ({history}:any) => {
             <Modal visible={isModalVisible} footer={[]}>
                 <Result
                     status="success"
-                    title="Оценка прошла успешно"
-                    subTitle="Хотите оценить ещё одну модель?"
+                    title="Оцiнка пройшла успiшно"
+                    subTitle="Оцiнити ще одну модель?"
                     extra={[
                         <Button onClick={() => setIsModalVisible(false)} type="primary" key="console">
                             Оценить
                         </Button>,
-                        <Button onClick={() => singOut()} key="signout">Выйти</Button>
+                        <Button onClick={() => singOut()} key="signout">Вийти</Button>
                     ]}
                 />
             </Modal>
-            <h1>Страница оценки модели</h1>
+            <h1>Оцiнювання моделi</h1>
             <h2 style={{color: 'crimson'}}>Суддя: <strong>{username}</strong></h2>
             <Form
                 name="basic"
@@ -117,7 +117,7 @@ const UserPage = ({history}:any) => {
             >
                 <h2>Номер моделі</h2>
                 <Form.Item
-                    rules={[{ required: true, message: 'Пожалуйста, заполните поле' }]}
+                    rules={[{ required: true, message: 'Будь ласка, заповнiть поле' }]}
                     style={{textAlign: 'center'}} wrapperCol={{ offset: 0}}
                     name='model'
                 >
