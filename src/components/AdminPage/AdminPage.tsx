@@ -45,6 +45,7 @@ const AdminPage = ({history}:any) => {
                 title: 'Модель',
                 dataIndex: 'model',
                 key: 'model',
+                sorter: (a:any, b:any) => a.model - b.model
             },
             {
                 title: 'Чистота робочого місця',
@@ -75,7 +76,8 @@ const AdminPage = ({history}:any) => {
             {
                 title: 'Бал',
                 key: 'totalScore',
-                dataIndex: 'totalScore'
+                dataIndex: 'totalScore',
+                sorter: (a:any, b:any) => a.totalScore - b.totalScore
             },
         ];
         return <Table columns={columns} dataSource={data} pagination={false} />;
