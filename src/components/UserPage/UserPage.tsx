@@ -14,13 +14,18 @@ const UserPage = ({history}:any) => {
     const keyId = uniqid();
 
     useEffect(() => {
+        let isMounted = false;
         const getCategories = async () => {
             const data = await getDocs(collection(db, 'assign_list'));
-            setCategories(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
-        }
-        getCategories()
-    }, []);
+            if(!isMounted) setCategories(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+        };
 
+        getCategories();
+
+        return () => {
+            isMounted = true
+            };
+    }, []);
 
     const renderCategories = (categories: any) => {
         if(categories) {
@@ -77,7 +82,6 @@ const UserPage = ({history}:any) => {
 
         const newData = {data: [{...values, key: keyId }], username: ''}
         newData.username = currentUser.email;
-        console.log(newData)
         setIsModalVisible(true);
 
         const usersRef = collection(db, currentUser.email);
@@ -85,7 +89,6 @@ const UserPage = ({history}:any) => {
         form.resetFields();
     };
 
-    console.log(currentUser.email)
     const username = currentUser.email.split("@")[0];
 
     return (
@@ -108,29 +111,29 @@ const UserPage = ({history}:any) => {
             <Form
                 name="basic"
                 form={form}
-                labelCol={{ span: 12 }}
-                wrapperCol={{ span: 24 }}
-                initialValues={{ remember: true }}
+                labelCol={{span: 12}}
+                wrapperCol={{span: 24}}
+                initialValues={{remember: true}}
                 onFinish={onFinish}
                 className="ant-advanced-search-form"
                 autoComplete="off"
             >
                 <h2>Номер моделі</h2>
                 <Form.Item
-                    rules={[{ required: true, message: 'Будь ласка, заповнiть поле' }]}
-                    style={{textAlign: 'center'}} wrapperCol={{ offset: 0}}
+                    rules={[{required: true, message: 'Будь ласка, заповнiть поле'}]}
+                    style={{textAlign: 'center'}} wrapperCol={{ offset: 0 }}
                     name='model'
                 >
                     <InputNumber size="large" min={1} max={100} />
                 </Form.Item>
                 <Divider>Оцінювання</Divider>
                 {renderCategories(categories)}
-                <Form.Item style={{textAlign: 'center'}} wrapperCol={{ offset: 0}}>
+                <Form.Item style={{textAlign: 'center'}} wrapperCol={{offset: 0}}>
                     <Button size='large' type="primary" htmlType="submit">
                         Відправити
                     </Button>
                 </Form.Item>
-                <Button onClick={() => singOut()} key="signout">Выйти</Button>
+                <Button onClick={() => singOut()} key="signout">Вийти</Button>
             </Form>
         </div>
     )

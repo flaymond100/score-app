@@ -11,7 +11,7 @@ const FinalResultTable = ({data}:any) => {
         data?.map((e:any) => {
             if (e.data[0].model > numberOfModels) setNumberOfModels(e.data[0].model);
         })
-    },[data])
+    },[data,numberOfModels])
 
     const countResults = () => {
         for (let i = 0; numberOfModels > i; i++){
@@ -20,14 +20,11 @@ const FinalResultTable = ({data}:any) => {
 
         if (numberOfModels >= results.length) {
             data.map((e: any) => {
-                results.map((model: any, index: number)=> {
-                    if (index + 1 === e.data[0].model) {
-                        results[index].result += +e.data[0].totalScore || ''
-                    }
+                return results.map((model: any, index: number)=> {
+                    if (index + 1 === e.data[0].model) return results[index].result += +e.data[0].totalScore || ''
                 })
             })
             setResult(results!);
-            console.log(results)
         }
     }
 

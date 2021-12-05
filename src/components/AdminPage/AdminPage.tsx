@@ -1,13 +1,13 @@
-import React, {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../context/AuthContext";
-import {addDoc, collection, doc, getDocs} from "firebase/firestore";
-import {auth, db} from "../../firebase-config";
-import { Redirect, withRouter } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { auth, db } from '../../firebase-config';
+import { Redirect, withRouter } from 'react-router-dom';
 import FinalResultTable from './FinalResultTable'
 import { Spin, Table } from "antd";
 
 const AdminPage = ({history}:any) => {
     const [users, setUsers] = useState<any>();
+    const [loading, setLoading] = useState<boolean>();
 
     const usersEmail = [
         'user@gmail.com',
@@ -15,18 +15,21 @@ const AdminPage = ({history}:any) => {
     ];
 
     useEffect(() => {
-        let arr:any = [];
+        setLoading(true);
         const getUsers = async () => {
-            await Promise.all(usersEmail.map(async(email:any) => {
-                const data = await getDocs(collection(db, email));
-                let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id })));
-                singleData.map((e:any) => {
-                    arr.push(e);
-                })
+                 let arr:any = [];
+                 (usersEmail.map(async(email:any) => {
+                    const data = await getDocs(collection(db, email));
+                    let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
+                    singleData.map((e: any) => {
+                        arr.push(e);
+                    })
+                setUsers(arr)
             }))
-            setUsers(arr)
-        }
-        getUsers()
+            setLoading(false);
+        };
+
+        getUsers();
 
     }, []);
 
@@ -34,10 +37,7 @@ const AdminPage = ({history}:any) => {
         let data: any = [];
 
         users.map((user:any) => {
-
-            if(parentTable.judge === user.username) {
-                data.push(user.data[0]);
-            }
+            if(parentTable.judge === user.username) return data.push(user.data[0]);
         });
 
         const columns = [
@@ -78,7 +78,6 @@ const AdminPage = ({history}:any) => {
                 dataIndex: 'totalScore'
             },
         ];
-        console.log(data)
         return <Table columns={columns} dataSource={data} pagination={false} />;
     };
 
@@ -109,14 +108,15 @@ const AdminPage = ({history}:any) => {
     return (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <h1>Admin page</h1>
-            {users ? <Table
-                className="components-table-demo-nested"
-                style={{width: '80%'}}
-                columns={columns}
-                expandable={{ expandedRowRender }}
-                dataSource={data}
-            /> : <Spin />}
-            <FinalResultTable data={users}/>
+            {loading ? <Spin/> :
+                <Table
+                    className="components-table-demo-nested"
+                    style={{width: '80%'}}
+                    columns={columns}
+                    expandable={{expandedRowRender}}
+                    dataSource={data}/>
+            }
+                <FinalResultTable data={users}/>
             <button onClick={singOut}>Sign out</button>
         </div>
     );

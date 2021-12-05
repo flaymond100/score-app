@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db} from '../firebase-config';
+import { auth } from '../firebase-config';
 import 'firebase/auth';
+import { Spin } from "antd";
 
 export const AuthContext = React.createContext({} as any);
 
@@ -22,11 +23,8 @@ export const AuthProvider = ({ children }: any) => {
         });
     }, []);
 
-    if(pending){
-        return <>Loading...</>
-    }
-    //console.log(currentUser)
     return (
+        pending ? <Spin /> :
         <AuthContext.Provider
             value={{
                 currentUser,
