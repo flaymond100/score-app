@@ -11,7 +11,7 @@ const FinalResultTable = ({data}:any) => {
         data?.map((e:any) => {
             if (e.data[0].model > numberOfModels) setNumberOfModels(e.data[0].model);
         })
-    },[data,numberOfModels])
+    },[data])
 
     const countResults = () => {
         for (let i = 0; numberOfModels > i; i++){

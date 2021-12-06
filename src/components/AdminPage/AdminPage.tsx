@@ -15,26 +15,33 @@ const AdminPage = ({history}:any) => {
     ];
 
     useEffect(() => {
+        let isCancelled = false;
         setLoading(true);
+
         const getUsers = async () => {
-                 let arr:any = [];
-                 (usersEmail.map(async(email:any) => {
-                    const data = await getDocs(collection(db, email));
-                    let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
-                    singleData.map((e: any) => {
-                        arr.push(e);
-                    })
-                setUsers(arr)
-            }))
+                const arr:any = [];
+                if (!isCancelled) {
+                    await (usersEmail.map(async(email:any) => {
+                        const data = await getDocs(collection(db, email));
+                        let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
+                        singleData.map((e: any) => {
+                            arr.push(e);
+                        })
+                        setUsers(arr);
+                    }))
+                }
             setLoading(false);
         };
 
         getUsers();
 
+        return () => {
+            isCancelled = true;
+        };
     }, []);
 
     const expandedRowRender = (parentTable:any) => {
-        let data: any = [];
+        const data: any = [];
 
         users.map((user:any) => {
             if(parentTable.judge === user.username) return data.push(user.data[0]);
