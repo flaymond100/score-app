@@ -118,22 +118,28 @@ const UserPage = ({history}:any) => {
                 className="ant-advanced-search-form"
                 autoComplete="off"
             >
-                <h2>Номер моделі</h2>
-                <Form.Item
-                    rules={[{required: true, message: 'Будь ласка, заповнiть поле'}]}
-                    style={{textAlign: 'center'}} wrapperCol={{ offset: 0 }}
-                    name='model'
-                >
-                    <InputNumber size="large" min={1} max={100} />
-                </Form.Item>
+                <div style={{textAlign: 'center', margin:'40px 0'}}>
+                    <h2>Номер моделі</h2>
+                    <Form.Item
+                        rules={[{required: true, message: 'Будь ласка, заповнiть поле'}]}
+                        style={{textAlign: 'center'}} wrapperCol={{ offset: 0 }}
+                        name='model'
+                    >
+                        <InputNumber size="large" min={1} max={100} />
+                    </Form.Item>
+                </div>
+
                 <Divider>Оцінювання</Divider>
                 {renderCategories(categories)}
-                <Form.Item style={{textAlign: 'center', padding: '10 0'}} wrapperCol={{offset: 0}}>
+                <Form.Item style={{textAlign: 'center', margin: '40px 0'}} wrapperCol={{offset: 0}}>
                     <Button size='large' type="primary" htmlType="submit">
                         Відправити
                     </Button>
                 </Form.Item>
-                <Button onClick={() => singOut()} key="signout">Вийти</Button>
+                <div style={{paddingBottom: '40px'}} >
+                    <Button onClick={() => singOut()} key="signout">Вийти</Button>
+                </div>
+
             </Form>
         </div>
     )

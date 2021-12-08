@@ -11,7 +11,8 @@ const AdminPage = ({history}:any) => {
 
     const usersEmail = [
         'user@gmail.com',
-        'user1@gmail.com'
+        'user1@gmail.com',
+        'user2@gmail.com'
     ];
 
     useEffect(() => {
