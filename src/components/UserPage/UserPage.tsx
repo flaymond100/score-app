@@ -100,7 +100,7 @@ const UserPage = ({history}:any) => {
                     subTitle="Оцiнити ще одну модель?"
                     extra={[
                         <Button onClick={() => setIsModalVisible(false)} type="primary" key="console">
-                            Оценить
+                            Оцiнити
                         </Button>,
                         <Button onClick={() => singOut()} key="signout">Вийти</Button>
                     ]}

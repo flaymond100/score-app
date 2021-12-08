@@ -60,7 +60,7 @@ const Home = ({ history }: any) => {
                 </Form.Item>
 
                 <Form.Item >
-                    <Button type='primary' htmlType='submit'>
+                    <Button size={'large'} type='primary' htmlType='submit'>
                         Вхiд
                     </Button>
                 </Form.Item>
