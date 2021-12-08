@@ -128,7 +128,7 @@ const UserPage = ({history}:any) => {
                 </Form.Item>
                 <Divider>Оцінювання</Divider>
                 {renderCategories(categories)}
-                <Form.Item style={{textAlign: 'center'}} wrapperCol={{offset: 0}}>
+                <Form.Item style={{textAlign: 'center', padding: '10 0'}} wrapperCol={{offset: 0}}>
                     <Button size='large' type="primary" htmlType="submit">
                         Відправити
                     </Button>
