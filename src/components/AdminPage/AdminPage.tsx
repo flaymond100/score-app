@@ -25,7 +25,7 @@ const AdminPage = ({history}:any) => {
                         const data = await getDocs(collection(db, email));
                         let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
                         singleData.map((e: any) => {
-                            arr.push(e);
+                            return arr.push(e);
                         })
                         setUsers(arr);
                     }))
