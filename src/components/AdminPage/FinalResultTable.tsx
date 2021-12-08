@@ -11,6 +11,7 @@ const FinalResultTable = ({data}:any) => {
         data?.map((e:any) => {
             if (e.data[0].model > numberOfModels) setNumberOfModels(e.data[0].model);
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[data])
 
     const countResults = () => {
@@ -21,7 +22,7 @@ const FinalResultTable = ({data}:any) => {
         if (numberOfModels >= results.length) {
             data.map((e: any) => {
                 return results.map((model: any, index: number)=> {
-                    if (index + 1 === e.data[0].model) return results[index].result += +e.data[0].totalScore || ''
+                    return index + 1 === e.data[0].model ? results[index].result += +e.data[0].totalScore || '' : null
                 })
             })
             setResult(results!);
