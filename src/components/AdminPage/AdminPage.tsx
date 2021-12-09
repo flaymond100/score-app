@@ -3,7 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../firebase-config';
 import { Redirect, withRouter } from 'react-router-dom';
 import FinalResultTable from './FinalResultTable'
-import { Spin, Table } from "antd";
+import {Button, Spin, Table } from "antd";
 
 const AdminPage = ({history}:any) => {
     const [users, setUsers] = useState<any>();
@@ -39,7 +39,7 @@ const AdminPage = ({history}:any) => {
         const data: any = [];
 
         users.map((user:any) => {
-            return parentTable.judge === user.username ? data.push(user.data[0]) : null
+            if (parentTable.judge === user.username) data.push(user.data[0])
         });
 
         const columns = [
@@ -103,14 +103,13 @@ const AdminPage = ({history}:any) => {
 
     const singOut = () => {
         auth.signOut()
-            .then(() => <Redirect to={"/"} />
-            )
+            .then(() => <Redirect to={"/"} />)
         history.push('/');
         return <Redirect to={"/"} />
     }
 
     return (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom:'100px'}}>
             <h1>Admin page</h1>
             {loading ? <Spin/> :
                 <Table
@@ -121,7 +120,7 @@ const AdminPage = ({history}:any) => {
                     dataSource={data}/>
             }
                 <FinalResultTable data={users}/>
-            <button onClick={singOut}>Sign out</button>
+            <Button onClick={singOut}>Sign out</Button>
         </div>
     );
 }

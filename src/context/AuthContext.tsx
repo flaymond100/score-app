@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: any) => {
     }, []);
 
     return (
-        pending ? <div style={{display: 'flex', alignItems:'center', justifyContent:'center'}}>
+        pending ? <div style={{display: 'flex', alignItems:'center', justifyContent:'center', height:'50%'}}>
                 <Spin /></div>:
         <AuthContext.Provider
             value={{

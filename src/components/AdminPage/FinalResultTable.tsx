@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from "antd";
+import {Button, Table} from "antd";
 
 const FinalResultTable = ({data}:any) => {
 
@@ -8,9 +8,12 @@ const FinalResultTable = ({data}:any) => {
     let results:any = [];
 
     useEffect(() => {
+        let models = 0;
         data?.map((e:any) => {
-            if (e.data[0].model > numberOfModels) setNumberOfModels(e.data[0].model);
+            if (e.data[0].model > models) models = e.data[0].model
         })
+
+        setNumberOfModels(models);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[data])
 
@@ -22,7 +25,7 @@ const FinalResultTable = ({data}:any) => {
         if (numberOfModels >= results.length) {
             data.map((e: any) => {
                 return results.map((model: any, index: number)=> {
-                    return index + 1 === e.data[0].model ? results[index].result += +e.data[0].totalScore || '' : null
+                     if (index + 1 === e.data[0].model) results[index].result += +e.data[0].totalScore || ''
                 })
             })
             setResult(results!);
@@ -47,7 +50,7 @@ const FinalResultTable = ({data}:any) => {
         <>
             <h2>Фiнальнi результати</h2>
             <Table style={{width: '30%', marginBottom:'30px'}} dataSource={result && result} columns={columns} />
-            <button style={{marginBottom:'40px'}} onClick={countResults}>Count results</button>
+            <Button type="primary" shape="round" size={'large'} style={{marginBottom:'40px'}} onClick={countResults}>Count results</Button>
         </>
     )
 
