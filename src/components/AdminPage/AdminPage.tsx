@@ -8,31 +8,36 @@ import {Button, Spin, Table } from "antd";
 const AdminPage = ({history}:any) => {
     const [users, setUsers] = useState<any>();
     const [loading, setLoading] = useState<boolean>();
-
-    const usersEmail = [
-        'user@gmail.com',
-        'user1@gmail.com',
-        'user2@gmail.com'
-    ];
+    const [usersEmail, setUsersEmail] = useState<any>([]);
 
     useEffect(() => {
         setLoading(true);
 
-        const getUsers = async () => {
+        const fetchUsers = async () => {
             const arr:any = [];
-            await (usersEmail.map(async(email:any) => {
-                const data = await getDocs(collection(db, email));
-                let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
-                singleData.map((e: any) => {
-                    return arr.push(e);
-                })
-                setUsers(arr);
-            }));
-            setLoading(false);
-        };
+            const data = await getDocs(collection(db, 'usersCollection'));
+            let singleData = (data.docs.map((doc) => ({...doc.data()})));
+            singleData.map((e: any) => {
+                return arr.push(e.email);
+            })
+            setUsersEmail(arr);
+            return arr;
+        }
 
-        getUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchUsers()
+            .then(async (usersFetchedEmails) => {
+                const arr:any = [];
+                await (usersFetchedEmails.map(async(email:any) => {
+                    const data = await getDocs(collection(db, email));
+                    let singleData = (data.docs.map((doc) => ({...doc.data(), key: doc.id})));
+                    singleData.map((e: any) => {
+                        return arr.push(e);
+                    })
+                    setUsers(arr);
+                }));
+                setLoading(false);
+            })
+
     }, []);
 
     const expandedRowRender = (parentTable:any) => {
