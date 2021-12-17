@@ -3,11 +3,12 @@ import { auth, db } from '../../firebase-config';
 import { withRouter, Redirect } from 'react-router';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
-import { Button, Col, Divider, Form, InputNumber, Modal, Result } from "antd";
+import {Button, Col, Divider, Form, InputNumber, Modal, Result, Select} from "antd";
 import uniqid from 'uniqid';
 
 const UserPage = ({history}:any) => {
     const [categories, setCategories] = useState<any>();
+    const [nominations, setNominations] = useState<any>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {currentUser} = useContext(AuthContext);
     const [form] = Form.useForm();
@@ -20,7 +21,13 @@ const UserPage = ({history}:any) => {
             if(!isMounted) setCategories(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
         };
 
+        const getNominations = async () => {
+            const data = await getDocs(collection(db, 'nominations'));
+            if(!isMounted) setNominations(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+        };
+
         getCategories();
+        getNominations();
 
         return () => {
             isMounted = true
@@ -72,17 +79,17 @@ const UserPage = ({history}:any) => {
     }
 
     const onFinish = async (values: any) => {
+        setIsModalVisible(true);
         let sum = 0;
         values.totalScore = 0;
 
         for (let key in values) {
-            if (key !== 'model') sum += +values[key];
+            if (key !== 'model' && key !== 'nomination') sum += +values[key];
         }
         values.totalScore = sum;
 
-        const newData = {data: [{...values, key: keyId }], username: ''}
+        const newData = {data: [{...values, key: keyId }], username: '', nominations: values.nomination}
         newData.username = currentUser.email;
-        setIsModalVisible(true);
 
         const usersRef = collection(db, currentUser.email);
         await addDoc(usersRef, newData)
@@ -90,6 +97,19 @@ const UserPage = ({history}:any) => {
     };
 
     const username = currentUser.email.split("@")[0];
+
+    const renderNominations = () => {
+        if(nominations) {
+            let arr = [];
+            for (let key in nominations[0]) {
+                if(key !== 'id') arr.push(<Select.Option key={key} value={key}>{nominations[0][key]}</Select.Option>)
+            }
+            return arr.map((select) => {
+                return select
+            })
+        }
+
+    }
 
     return (
         <div style={{textAlign:'center'}}>
@@ -126,6 +146,19 @@ const UserPage = ({history}:any) => {
                         name='model'
                     >
                         <InputNumber size="large" min={1} max={100} />
+                    </Form.Item>
+                    <Form.Item
+                        rules={[{required: true, message: 'Будь ласка, заповнiть поле'}]}
+                        style={{textAlign: 'center'}} wrapperCol={{ offset: 0 }}
+                        name='nomination'
+                    >
+                        <Select
+                            placeholder="Оберiть номiнацiю"
+                            optionFilterProp="children"
+                            style={{textAlign: 'center', width:'60%'}}
+                        >
+                            {renderNominations()}
+                        </Select>
                     </Form.Item>
                 </div>
 

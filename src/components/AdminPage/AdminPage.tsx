@@ -44,7 +44,9 @@ const AdminPage = ({history}:any) => {
         const data: any = [];
 
         users.map((user:any) => {
-            if (parentTable.judge === user.username) data.push(user.data[0])
+            if (parentTable.judge === user.username && parentTable.nomination === user.data[0].nomination) {
+                data.push(user.data[0])
+            }
         });
 
         const columns = [
@@ -98,13 +100,38 @@ const AdminPage = ({history}:any) => {
         }
     ];
 
-    const data = [];
+    const dataEyebron = [];
+    const dataLips = [];
+    const dataYoungEyebron = [];
+    const dataYoungLips = [];
+
     for (let i = 0; usersEmail.length > i; i++) {
-        data.push({
+        dataEyebron.push({
             key: usersEmail[i]+i,
             judge: usersEmail[i],
+            nomination: 'eyebrow',
         });
+
+        dataLips.push({
+            key: usersEmail[i]+i,
+            judge: usersEmail[i],
+            nomination: 'lips',
+        });
+
+        dataYoungEyebron.push({
+            key: usersEmail[i]+i,
+            judge: usersEmail[i],
+            nomination: 'young_eyebrow',
+        });
+
+        dataYoungLips.push({
+            key: usersEmail[i]+i,
+            judge: usersEmail[i],
+            nomination: 'young_lips',
+        });
+
     }
+
 
     const singOut = () => {
         auth.signOut()
@@ -117,12 +144,38 @@ const AdminPage = ({history}:any) => {
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom:'100px'}}>
             <h1>Admin page</h1>
             {loading ? <Spin/> :
-                <Table
-                    className="components-table-demo-nested"
-                    style={{width: '80%'}}
-                    columns={columns}
-                    expandable={{expandedRowRender}}
-                    dataSource={data}/>
+                <>
+                    <h1>Губи</h1>
+                    <Table
+                        className="components-table-demo-nested"
+                        style={{width: '80%'}}
+                        columns={columns}
+                        expandable={{expandedRowRender}}
+                        dataSource={dataLips}/>
+                    <h1>Брови</h1>
+                    <Table
+                        className="components-table-demo-nested"
+                        style={{width: '80%'}}
+                        columns={columns}
+                        expandable={{expandedRowRender}}
+                        dataSource={dataEyebron}/>
+                    <h1>Губи(майстер до 2-х рокiв)</h1>
+                    <Table
+                        className="components-table-demo-nested"
+                        style={{width: '80%'}}
+                        columns={columns}
+                        expandable={{expandedRowRender}}
+                        dataSource={dataYoungLips}/>
+                    <h1>Брови(майстер до 2-х рокiв)</h1>
+                    <Table
+                        className="components-table-demo-nested"
+                        style={{width: '80%'}}
+                        columns={columns}
+                        expandable={{expandedRowRender}}
+                        dataSource={dataYoungEyebron}/>
+
+                </>
+
             }
                 <FinalResultTable data={users}/>
             <Button onClick={singOut}>Sign out</Button>
