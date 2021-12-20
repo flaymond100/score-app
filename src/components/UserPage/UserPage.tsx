@@ -51,8 +51,8 @@ const UserPage = ({history}:any) => {
                                 if (value <= 0) {
                                     return Promise.reject("Мінімальний бал 1");
                                 }
-                                if (value > 100) {
-                                    return Promise.reject("Максимальний бал 100");
+                                if (value > 30) {
+                                    return Promise.reject("Максимальний бал 30");
                                 }
                                 return Promise.resolve();
                             },})]}>
@@ -145,7 +145,7 @@ const UserPage = ({history}:any) => {
                         style={{textAlign: 'center'}} wrapperCol={{ offset: 0 }}
                         name='model'
                     >
-                        <InputNumber size="large" min={1} max={100} />
+                        <InputNumber size="large" min={1} max={999} />
                     </Form.Item>
                     <Form.Item
                         rules={[{required: true, message: 'Будь ласка, заповнiть поле'}]}
@@ -169,9 +169,9 @@ const UserPage = ({history}:any) => {
                         Відправити
                     </Button>
                 </Form.Item>
-                <div style={{paddingBottom: '40px'}} >
-                    <Button onClick={() => singOut()} key="signout">Вийти</Button>
-                </div>
+                <>
+                    <Button style={{marginBottom: '40px'}} onClick={() => singOut()} key="signout">Вийти</Button>
+                </>
 
             </Form>
         </div>
